@@ -7,7 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f7ed495-9a5c-44e6-80e5-7674f58f57d4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faceDemo/util/FaceHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faceDemo/util/FaceHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -36,6 +36,7 @@
           <entry key="java" value="21" />
           <entry key="js" value="2" />
           <entry key="jsp" value="1" />
+          <entry key="md" value="1" />
           <entry key="properties" value="1" />
           <entry key="sql" value="2" />
           <entry key="xml" value="11" />
@@ -49,6 +50,7 @@
           <entry key="JAVA" value="21" />
           <entry key="JSP" value="1" />
           <entry key="JavaScript" value="2" />
+          <entry key="Markdown" value="1" />
           <entry key="Properties" value="1" />
           <entry key="SQL" value="2" />
           <entry key="XML" value="11" />
@@ -87,25 +89,6 @@
                 <element signature="e#1025#1026#0" expanded="true" />
                 <element signature="e#1227#1228#0" expanded="true" />
                 <element signature="e#1288#1289#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/faceDemo/model/User.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="43" selection-start-line="43" selection-end-line="43" />
-              <folding>
-                <element signature="e#335#336#0" expanded="true" />
-                <element signature="e#360#361#0" expanded="true" />
-                <element signature="e#394#395#0" expanded="true" />
-                <element signature="e#422#423#0" expanded="true" />
-                <element signature="e#344#345#0" expanded="true" />
-                <element signature="e#376#377#0" expanded="true" />
-                <element signature="e#426#427#0" expanded="true" />
-                <element signature="e#468#469#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -171,7 +154,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/faceDemo/util/FaceHelper.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-317">
@@ -179,6 +162,18 @@
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="38">
+                <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -238,6 +233,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/faceDemo/controller/UserController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/faceDemo/service/impl/UserServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/faceDemo/util/FaceHelper.java" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -326,7 +322,7 @@
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1547102155972" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1547102856325" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../tomcat/apache-tomcat-8.0.52/webapps/faceDemo" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -471,7 +467,7 @@
       <updated>1547018910187</updated>
       <workItem from="1547018913988" duration="6382000" />
       <workItem from="1547038643391" duration="7728000" />
-      <workItem from="1547080817715" duration="13283000" />
+      <workItem from="1547080817715" duration="13900000" />
     </task>
     <servers />
   </component>
@@ -484,7 +480,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27393000" />
+    <option name="totallyTimeSpent" value="28010000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -497,6 +493,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="878" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19436997" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -772,6 +769,16 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="38">
+            <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
