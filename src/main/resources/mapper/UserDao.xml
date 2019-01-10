@@ -4,8 +4,38 @@
 <!-- 设置为IUserDao接口方法提供sql语句配置 -->
 <mapper namespace="com.faceDemo.dao.IUserDao">
 
+    <sql id="userBaseColumn">
+        id,
+        password,
+        username,
+        imgBase64
+    </sql>
+
     <select id="selectUser" resultType="User" parameterType="long">
         SELECT * FROM user WHERE id = #{id}
     </select>
 
+    <select id="selectUserByUsernameAndPassword" parameterType="User" resultType="User">
+        select
+        <include refid="userBaseColumn"/>
+        from user where username=#{username} and password=#{password}
+    </select>
+
+    <select id="selectUserByUsername" parameterType="User" resultType="User">
+        select
+        <include refid="userBaseColumn"/>
+        from  user where username=#{username}
+    </select>
+
+    <select id="insertUser" parameterType="User">
+        insert into user(
+        username,
+        password,
+        imgBase64
+        )values (
+        #{username},
+        #{password},
+        #{imgBase64}
+        )
+    </select>
 </mapper>

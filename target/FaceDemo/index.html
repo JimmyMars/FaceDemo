@@ -2,23 +2,152 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>test</title>
-</head>
-<script>
-    function selectUser() {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                document.getElementById("test").innerHTML = xmlhttp.responseText;
-            }
+    <title>登陆</title>
+    <style>
+        .wrapper{
+            text-align: center;
         }
-        xmlhttp.open("POST", "user/showUser.do", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send("id=1");
-    }
-</script>
+        .face canvas{
+            display: none;
+        }
+        .tip {
+            color: red;
+        }
+    </style>
+</head>
+
 <body>
-<p id="test">Hello World!</p>
-<button type="button" onclick="selectUser()">onclick test</button>
+    <div id="app">
+        <div class="wrapper">
+            <div class="username">
+                <label>用户名</label>
+                <input v-model="username">
+            </div>
+            <div v-show="passwordLogin">
+                <label>密码</label>
+                <input type="password" v-model="password">
+            </div>
+            <div class="btn-wrapper">
+                <button type="button" @click="login">登陆</button>
+                <a href="javascript:void(0)" @click="toggleLoginType">{{passwordLogin ? '刷脸': '密码'}}登陆</a>
+                <a href="register.html">注册</a>
+            </div>
+            <div class="tip">
+                {{tip}}
+            </div>
+            <div class="face" v-show="!passwordLogin">
+                <video ref="video" width="300" height="300"></video>
+                <canvas ref="canvas" width="300" height="300"></canvas>
+                <!--<img ref="previewImg" src="">-->
+            </div>
+        </div>
+    </div>
+
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+    <script>
+
+        const CODE_SUCCESS = 0
+        const CODE_ERROR = 1
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                username: '',
+                password: '',
+                passwordLogin: true, // 密码登陆方式
+                tip: ''
+            },
+            mounted() {
+                this._initMedia()
+            },
+            methods: {
+                // 初始化摄像头
+                _initMedia() {
+                    let constraints = {
+                        audio: false,
+                        video: {width: 300, height: 300}
+                    }
+
+                    let _this = this
+                    // 调用浏览器摄像头
+                    navigator.mediaDevices.getUserMedia(constraints)
+                        .then((mediaStream) => {
+                            _this.video = this.$refs.video
+                            // 将结果分配给 video 标签
+                            _this.video.srcObject = mediaStream
+                            _this.video.onloadedmetadata = function (e) {
+                                // 元数据加载后，播放
+                                _this.video.play()
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err.name + ":" + err.message)
+                        })
+                },
+                login() {
+
+                    if (this.username === '') {
+                        this.tip = '用户名不能为空！'
+                        return
+                    }
+
+                    this.tip = ''
+
+                    let _this = this
+
+                    let base64Str = ''
+
+                    // 判断登陆方式
+                    if (!this.passwordLogin) {
+                        // 刷脸登陆
+                        // 取到 canvas
+                        this.canvas = this.$refs.canvas;
+                        // 获取 canvas 上下文
+                        let ctx = this.canvas.getContext('2d')
+                        // 截图
+                        ctx.drawImage(this.video,0, 0, 300, 300)
+                        // 将截图转换成 base64
+                        this.image = this.canvas.toDataURL('image/png')
+                        // 只保留 base64 部分
+                        base64Str = this.image.split('base64,')[1]
+
+                        console.log(base64Str)
+                    }
+
+                    this.tip = '正在登陆...'
+
+                    // 登陆请求
+                    $.ajax({
+                        url: 'user/login.do',
+                        data: {
+                            username: _this.username,
+                            password: _this.password,
+                            imgBase64: base64Str,
+                            passwordLogin: _this.passwordLogin
+                        },
+                        success(resp) {
+                            console.log(resp)
+                            if (resp) {
+                                if (resp.code === CODE_SUCCESS) {
+                                    alert("登陆成功！");
+                                } else {
+                                    alert(resp.message)
+                                }
+                            }
+                            _this.tip = ''
+                        },
+                        error(error) {
+                            console.log(error)
+                        }
+                    })
+
+                },
+                // 切换登陆方式
+                toggleLoginType() {
+                    this.passwordLogin = !this.passwordLogin
+                }
+            }
+        })
+    </script>
 </body>
 </html>

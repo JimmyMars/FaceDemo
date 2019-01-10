@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <style>
+        .wrapper{
+            text-align: center;
+        }
+        .face-wrapper{
+            margin: 20px;
+        }
+        .face-wrapper canvas{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="wrapper">
+            <div>
+                <div>
+                    <label>用户名</label>
+                    <input v-model="username">
+                </div>
+                <div>
+                    <label>密码</label>
+                    <input type="password" v-model="password">
+                </div>
+                <button type="button" @click="handleSubmit">提交</button>
+            </div>
+            <div class="info">
+                {{info}}
+            </div>
+            <div class="face-wrapper">
+                <video ref="video" width="300" height="300"></video>
+                <canvas ref="canvas" width="300" height="300"></canvas>
+                <img ref="previewImg" src="">
+            </div>
+
+        </div>
+    </div>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+    <script>
+
+        const CODE_SUCCESS = 0
+        const CODE_ERROR = 1
+
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                username: '',
+                password: '',
+                info: ''
+            },
+            mounted() {
+                this._intiMedia()
+            },
+            methods: {
+                _intiMedia() {
+                    let constraints = {
+                        audio: false,
+                        video: {width: 300, height: 300}
+                    }
+
+                    let _this = this
+                    navigator.mediaDevices.getUserMedia(constraints)
+                        .then((mediaStream) => {
+                            _this.video = this.$refs.video
+                            _this.video.srcObject = mediaStream
+                            _this.video.onloadedmetadata = function (e) {
+                                _this.video.play()
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err.name + ":" + err.message)
+                        })
+                },
+                handleSubmit() {
+
+                    if (this.username === '' || this.password === '') {
+
+                        this.info = '用户名或密码不能为空！'
+
+                        return;
+                    }
+
+                    this.info = ''
+
+                    this.canvas = this.$refs.canvas;
+                    let ctx = this.canvas.getContext('2d')
+                    ctx.drawImage(this.video,0, 0, 300, 300)
+                    this.image = this.canvas.toDataURL('image/png')
+
+                    this.$refs.previewImg.src = this.image
+
+                    let base64Str = this.image.split('base64,')[1]
+
+                    console.log(base64Str)
+
+                    this.info = '正在录入...'
+
+                    let _this = this
+                    $.ajax({
+                        url: 'user/register.do',
+                        data: {
+                            username: _this.username,
+                            password: _this.password,
+                            imgBase64: base64Str
+                        },
+                        success: function (resp) {
+                            console.log(resp)
+                            if (resp.code === CODE_SUCCESS) {
+                                _this.info = resp.message
+                            } else {
+                                _this.info = resp.message
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error)
+                        }
+                    })
+                }
+            }
+
+        })
+    </script>
+</body>
+</html>

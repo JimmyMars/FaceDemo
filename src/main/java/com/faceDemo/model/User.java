@@ -5,28 +5,24 @@ import java.util.Date;
 public class User {
 
     private long id;
-    private String email;
     private String password;
     private String username;
-    private String role;
-    private int status;
-    private Date regTime;
-    private String regIp;
+    private String imgBase64;
 
     public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getImgBase64() {
+        return imgBase64;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setImgBase64(String imgBase64) {
+        this.imgBase64 = imgBase64;
     }
 
     public String getPassword() {
@@ -45,36 +41,7 @@ public class User {
         this.username = username;
     }
 
-    public String getRole() {
-        return role;
-    }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public Date getRegTime() {
-        return regTime;
-    }
-
-    public void setRegTime(Date regTime) {
-        this.regTime = regTime;
-    }
-
-    public String getRegIp() {
-        return regIp;
-    }
-
-    public void setRegIp(String regIp) {
-        this.regIp = regIp;
-    }
 
 }

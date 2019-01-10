@@ -6,4 +6,10 @@ public interface IUserDao {
 
     User selectUser(long id);
 
+    void insertUser(User user);
+
+    User selectUserByUsernameAndPassword(User user);
+
+    User selectUserByUsername(User user);
+
 }
