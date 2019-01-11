@@ -48,4 +48,10 @@ public class UserController {
         return userService.login(user, passwordLogin);
     }
 
+    @RequestMapping("/aliveCheck")
+    @ResponseBody
+    public DataResp aliveCheck(String imgBase64, String checkType, String userId) {
+        return userService.aliveCheck(imgBase64, checkType, userId);
+    }
+
 }

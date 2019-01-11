@@ -27,8 +27,12 @@
                 <label>密码</label>
                 <input type="password" v-model="password">
             </div>
+            <div v-show="!passwordLogin">
+                <label>进行活体检测：</label><input type="checkbox" v-model="aliveCheck">
+            </div>
             <div class="btn-wrapper">
                 <button type="button" @click="login">登陆</button>
+
                 <a href="javascript:void(0)" @click="toggleLoginType">{{passwordLogin ? '刷脸': '密码'}}登陆</a>
                 <a href="register.html">注册</a>
             </div>
@@ -49,13 +53,21 @@
 
         const CODE_SUCCESS = 0
         const CODE_ERROR = 1
+
+        // 活体检测类型
+        const [CHECK_TYPE_MOUTH, CHECK_TYPE_EYE] = ['mouth', 'eye']
+
+        // 活体检测结果 1：通过 0：需要继续检测 -1：失败，摄像头前的对象没有活动
+        const [CHECK_SUCCESS, CHECK_NORMAL, CHECK_FAILED] = [1, 0, -1]
+
         const vm = new Vue({
             el: '#app',
             data: {
                 username: '',
                 password: '',
                 passwordLogin: true, // 密码登陆方式
-                tip: ''
+                tip: '',
+                aliveCheck: false   // 登陆时是否进行活体检测，默认 false
             },
             mounted() {
                 this._initMedia()
@@ -84,6 +96,23 @@
                             console.log(err.name + ":" + err.message)
                         })
                 },
+                // canvas 截取图片
+                _captureImg() {
+                    // 取到 canvas
+                    this.canvas = this.$refs.canvas;
+                    // 获取 canvas 上下文
+                    let ctx = this.canvas.getContext('2d')
+                    // 截图
+                    ctx.drawImage(this.video,0, 0, 300, 300)
+                    // 将截图转换成 base64
+                    this.image = this.canvas.toDataURL('image/png')
+                    // 只保留 base64 部分
+                    let base64Str = this.image.split('base64,')[1]
+
+                    // console.log(base64Str)
+
+                    return base64Str
+                },
                 login() {
 
                     if (this.username === '') {
@@ -100,18 +129,7 @@
                     // 判断登陆方式
                     if (!this.passwordLogin) {
                         // 刷脸登陆
-                        // 取到 canvas
-                        this.canvas = this.$refs.canvas;
-                        // 获取 canvas 上下文
-                        let ctx = this.canvas.getContext('2d')
-                        // 截图
-                        ctx.drawImage(this.video,0, 0, 300, 300)
-                        // 将截图转换成 base64
-                        this.image = this.canvas.toDataURL('image/png')
-                        // 只保留 base64 部分
-                        base64Str = this.image.split('base64,')[1]
-
-                        console.log(base64Str)
+                        base64Str = this._captureImg()
                     }
 
                     this.tip = '正在登陆...'
@@ -129,12 +147,19 @@
                             console.log(resp)
                             if (resp) {
                                 if (resp.code === CODE_SUCCESS) {
-                                    alert("登陆成功！");
+                                    // 判断是否还要进行活体检测，即检测 张张嘴和眨眨眼
+                                    if (_this.aliveCheck) {
+                                        _this.tip = '对比成功'
+                                        // resp.data 为 后台返回的 user 对象
+                                        _this._handleAliveCheck(resp.data)
+                                    } else {
+                                        alert("登陆成功！")
+                                    }
                                 } else {
                                     alert(resp.message)
                                 }
                             }
-                            _this.tip = ''
+                            // _this.tip = ''
                         },
                         error(error) {
                             console.log(error)
@@ -145,6 +170,60 @@
                 // 切换登陆方式
                 toggleLoginType() {
                     this.passwordLogin = !this.passwordLogin
+                },
+                // 处理活体检测
+                _handleAliveCheck(user) {
+
+                    // 延时一下执行
+                    setTimeout(() => {
+                        this._postAliveCheck(CHECK_TYPE_MOUTH, user.id)
+                    }, 2000)
+                },
+                _postAliveCheck(checkType, userId) {
+                    console.log(checkType)
+                    this.tip = `请${checkType===CHECK_TYPE_MOUTH ? '张张嘴' : '眨眨眼'}`
+                    let imgBase64 = this._captureImg()
+                    $.ajax({
+                        url: 'user/aliveCheck.do',
+                        // type: 'POST',
+                        data: {
+                            imgBase64: imgBase64,
+                            checkType: checkType,
+                            userId: userId
+                        },
+                        success(resp) {
+                            if (resp) {
+                                console.log(`code:${resp.code},data:${resp.data},`)
+                                if (resp.code === CODE_SUCCESS) {
+                                    if (resp.data === CHECK_SUCCESS) {
+                                        alert(`${checkType===CHECK_TYPE_MOUTH ? '张张嘴' : '眨眨眼'}检测成功`)
+                                        vm.tip = ''
+                                        if (checkType === CHECK_TYPE_EYE) {
+                                            // 如果眨眨眼也检测完成之后，这样流程就走完了
+                                            alert("活体检测登陆成功")
+                                        } else {
+                                            // 如果张张嘴检测完之后，接着检测眨眨眼
+                                            vm._postAliveCheck(CHECK_TYPE_EYE, userId);
+                                        }
+
+                                    } else if (resp.data === CHECK_NORMAL) {
+                                        console.log('继续检测...')
+                                        vm._postAliveCheck(checkType, userId)
+                                    }
+                                } else if (resp.code === CODE_ERROR && resp.data === CHECK_FAILED) {
+                                    alert("检测失败，检测对象没有活动");
+                                    vm.tip = ''
+                                } else {
+                                    // 脸部识别不到提示的信息，继续检测
+                                    alert(resp.message)
+                                    vm._postAliveCheck(checkType, userId)
+                                }
+                            }
+                        },
+                        error(error) {
+                            console.log(error)
+                        }
+                    })
                 }
             }
         })

@@ -25,13 +25,32 @@ public class FaceHelper {
     public static final String FACE_API_COMPARE = "compare";
 
     // 你的 key
-    public static final String API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXX";
+    public static final String API_KEY = "LBgFcHV4OsdJeejLCzjW-V4vmbrj9Dsy";
     // 你的 SECRET
-    private static final String API_SECRET = "XXXXXXXXXXXXXXXXXXXXXX";
+    private static final String API_SECRET = "wNs7v7kFPpDMMD8f0n4mSElKnWnm5Ie6";
 
     private final static int CONNECT_TIME_OUT = 30000;
     private final static int READ_OUT_TIME = 50000;
     private static String boundaryString = getBoundary();
+
+    // 活体检测类型
+    public static final String CHECK_TYPE_MOUTH = "mouth";
+    public static final String CHECK_TYPE_EYE = "eye";
+
+    // 嘴巴或眼睛状态
+    private static final String STATUS_OPEN = "open";
+    private static final String STATUS_CLOSE = "close";
+
+    // 活体检测失败次数阈值，超过这个次数就认为检测失败，不再检测
+    private static final int CHECK_FAILED_THRESHOLD = 10;
+
+    // 记录检测失败次数的 key，和用户 id 一起组成唯一的 key
+    private static final String KEY_FAILED_COUNT = "failedCount";
+
+    // 存放张张嘴脸部对比数据的 map
+    private static Map<String, Object> mouthCheckMap = new HashMap<>();
+    // 存放眨眨眼脸部对比数据的 map
+    private static Map<String, Object> eyeCheckMap = new HashMap<>();
 
     public static byte[] post(String api, HashMap<String, String> map, HashMap<String, byte[]> fileMap) throws Exception {
         HttpURLConnection conne;
@@ -146,13 +165,24 @@ public class FaceHelper {
                 // 获取 facequality 字段，用于判断图片质量是否可以用于后续的人脸对比
                 JSONObject fq = face.getJSONObject("attributes").getJSONObject("facequality");
 
+                //-- 打印测试下嘴巴状态
+                JSONObject mouthStatus = face.getJSONObject("attributes").getJSONObject("mouthstatus");
+                System.out.println("嘴巴状态：" + mouthStatus.toString());
+
+                // 测试下眼睛状态
+                JSONObject eyeStatus = face.getJSONObject("attributes").getJSONObject("eyestatus");
+                System.out.println("眼睛状态：" + eyeStatus);
+                //--
+
                 if (validateFaceQuality(fq)) {
                     dataResp.setCode(DataResp.Code.SUCCESS);
                     dataResp.setMessage("录入成功");
+                    // 返回识别的脸部 json 数据，用于后续操作
+                    dataResp.setData(face);
                 } else {
                     dataResp.setCode(DataResp.Code.ERROR);
-                    dataResp.setMessage("录入人脸质量太差");
-                    System.out.println("录入人脸质量太差");
+                    dataResp.setMessage("请端正姿势");
+                    System.out.println("请端正姿势");
                 }
 
             } else {
@@ -237,5 +267,134 @@ public class FaceHelper {
             return confidence > threshold1E5;
         }
         return false;
+    }
+
+    /**
+     * 张张嘴或眨眨眼检测
+     * @param imgBase64
+     * @param checkType
+     * @param userId
+     * @return // 返回 0/1/-1，1 代表成功；0 代表继续检测；-1 代表检测失败，认为不是活体
+     */
+    public static synchronized DataResp aliveCheck(String imgBase64, String checkType, String userId) {
+
+        System.out.println("正在检测====>>>>>>>>>" + (checkType.equals(CHECK_TYPE_MOUTH) ? "张张嘴" : "眨眨眼"));
+
+        DataResp dataResp = faceDetect(imgBase64);
+
+        // 当前识别到的脸，是一个 JSONObject
+        JSONObject currentFace = (JSONObject) dataResp.getData();
+
+        if (dataResp.getCode() == DataResp.Code.SUCCESS) {
+
+            Map<String, Object> tmpMap = null;
+
+            // 根据检测类型，引用对应的 map
+            if (checkType.equals(CHECK_TYPE_MOUTH)) {
+                tmpMap = mouthCheckMap;
+            } else {
+                tmpMap = eyeCheckMap;
+            }
+
+            JSONObject sourceFace = (JSONObject) tmpMap.get(userId);
+            if (sourceFace == null) {
+                // 如果是第一次请求，就把第一次的脸部特征当作后续比较的参考对象
+                tmpMap.put(userId, currentFace);
+                // 并初始化检测失败次数为 0
+                tmpMap.put(userId + KEY_FAILED_COUNT, 0);
+                dataResp.setData(0);
+                dataResp.setMessage("需继续检测");
+                dataResp.setCode(DataResp.Code.SUCCESS);
+            } else {
+                // 否则，就把当前识别的脸和第一次的脸做比较
+                // 把当前的 face 的 mouth 特征和第一次的 face 的 mouth 特征取出，并进行比较
+                String currentFaceStatus = getStatus(currentFace, checkType);
+                String sourceFaceStatus = getStatus(sourceFace, checkType);
+                // 判断两次的状态是否一致
+                if (!currentFaceStatus.equals(sourceFaceStatus)) {
+                    // 如果不一致，则证明摄像头前的人是活动着的，检测通过
+                    dataResp.setData(1);
+                    dataResp.setCode(DataResp.Code.SUCCESS);
+                    dataResp.setMessage("检测通过");
+                    // 检测通过需要把该用户对用的 map 里的值清掉，否则会影响下次的检测
+                    clearMapKey(tmpMap, userId);
+                } else {
+                    // 否则，继续检测，记录失败次数，超过一定失败次数则检测不通过，则认为摄像头前的人是不动的
+                    int failedCount = (Integer) tmpMap.get(userId + KEY_FAILED_COUNT);
+                    System.out.println("检测失败次数："+failedCount);
+                    if (failedCount > CHECK_FAILED_THRESHOLD) {
+                        dataResp.setData(-1);
+                        dataResp.setCode(DataResp.Code.ERROR);
+                        dataResp.setMessage("检测失败，检测对象没有按提示活动");
+                        // 检测失败了，也要清掉 map 对应的数据
+                        clearMapKey(tmpMap, userId);
+                    } else {
+                        failedCount++;
+                        tmpMap.put(userId + KEY_FAILED_COUNT, failedCount);
+                        dataResp.setData(0);
+                        dataResp.setCode(DataResp.Code.SUCCESS);
+                        dataResp.setMessage("需继续检测");
+                    }
+                }
+            }
+        }
+
+        return dataResp;
+    }
+
+    /**
+     * 根据分数判断是张开还是闭合
+     * @param value
+     */
+    public static String validateStatus(double open, double close) {
+        // 如果 open 的分值比 close 的分值大，则认为是打开的，否则相反
+        return open > close ? STATUS_OPEN : STATUS_CLOSE;
+    }
+
+    /**
+     * 清除 map 中的值
+     */
+    private static void clearMapKey(Map<String, Object> map, String key) {
+        map.remove(key);
+        map.remove(key + KEY_FAILED_COUNT);
+    }
+
+    /**
+     * 获取嘴巴或眼睛张合状态
+     * @param face
+     * @param checkType
+     * @return
+     */
+    private static String getStatus(JSONObject face, String checkType) {
+        String status = "";
+        if (checkType.equals(CHECK_TYPE_MOUTH)) {
+            // mouthstatus 字段记录了嘴巴的状态
+            JSONObject mouthStatus = face.getJSONObject("attributes").getJSONObject("mouthstatus");
+            // 获取 mouthstatus 字段的子字段 open 和 close，这两个是浮点数的分值，并确定状态
+            status = validateStatus(mouthStatus.getDouble("open"), mouthStatus.getDouble("close"));
+        } else {
+            // eyestatus 字段记录眼睛状态数据，他的子字段 left_eye_status 和 right_eye_status 又分别记录了左右眼的状态
+            JSONObject eyeStatus = face.getJSONObject("attributes").getJSONObject("eyestatus");
+            // 分别获取左右眼的状态
+            JSONObject leftEyeStatus = eyeStatus.getJSONObject("left_eye_status");
+            JSONObject rightEyeStatus = eyeStatus.getJSONObject("right_eye_status");
+
+            System.out.println("leftEyeStatus:"+leftEyeStatus);
+
+            // 左右眼状态中的子字段 no_glass_eye_open 和 no_glass_eye_close 分别记录了不戴眼镜睁开眼的置信度和不戴眼镜闭眼的置信度，都是浮点数来的（这里只考虑不戴眼镜的😄）
+            String ls = validateStatus(leftEyeStatus.getDouble("no_glass_eye_open"), leftEyeStatus.getDouble("no_glass_eye_close"));
+            String rs = validateStatus(rightEyeStatus.getDouble("no_glass_eye_open"), rightEyeStatus.getDouble("no_glass_eye_close"));
+
+            // 这里如果左右眼的状态一致的话，返回其中一个就行了
+            if (ls.equals(rs)) {
+                status = ls;
+            } else {
+                // 如果左右眼不一样，那应该是在放电了 😂
+                // 不过放在本例也算合理，也算眨了眼睛了，也取其中一个吧
+                System.out.println("请不要对我放电~😘");
+                status = ls;
+            }
+        }
+        return status;
     }
 }

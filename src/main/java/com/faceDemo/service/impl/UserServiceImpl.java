@@ -48,6 +48,10 @@ public class UserServiceImpl implements IUserService {
                 if (user != null) {
                     // 进行对比
                     dataResp = FaceHelper.faceCompare(user.getImgBase64(), compareUser.getImgBase64());
+                    if (dataResp.getCode() == DataResp.Code.SUCCESS) {
+                        // 把用户返回前端，用于后续操作
+                        dataResp.setData(compareUser);
+                    }
                 } else {
                     dataResp.setCode(DataResp.Code.ERROR);
                     dataResp.setMessage("该用户不存在");
@@ -70,5 +74,11 @@ public class UserServiceImpl implements IUserService {
         }
 
         return dataResp;
+    }
+
+    @Override
+    public DataResp aliveCheck(String imgBase64, String checkType, String userId) {
+        System.out.println("后台收到的 checkType: "+checkType+" base64：" + imgBase64);
+        return FaceHelper.aliveCheck(imgBase64, checkType, userId);
     }
 }

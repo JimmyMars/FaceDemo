@@ -11,4 +11,6 @@ public interface IUserService {
 
     public DataResp login(User user, boolean passwordLogin);
 
+    public DataResp aliveCheck(String imgBase64, String checkType, String userId);
+
 }
