@@ -25,9 +25,9 @@ public class FaceHelper {
     public static final String FACE_API_COMPARE = "compare";
 
     // 你的 key
-    public static final String API_KEY = "LBgFcHV4OsdJeejLCzjW-V4vmbrj9Dsy";
+    public static final String API_KEY = "XXXXXXXXXXXXXXXXXXX";
     // 你的 SECRET
-    private static final String API_SECRET = "wNs7v7kFPpDMMD8f0n4mSElKnWnm5Ie6";
+    private static final String API_SECRET = "XXXXXXXXXXXXXXXXXXXX";
 
     private final static int CONNECT_TIME_OUT = 30000;
     private final static int READ_OUT_TIME = 50000;

@@ -7,12 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f7ed495-9a5c-44e6-80e5-7674f58f57d4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faceDemo/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faceDemo/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faceDemo/service/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faceDemo/service/IUserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faceDemo/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faceDemo/service/impl/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/faceDemo/util/FaceHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faceDemo/util/FaceHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -66,7 +61,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="5339" />
-          <entry key="java" value="7553" />
+          <entry key="java" value="7592" />
           <entry key="md" value="19" />
           <entry key="properties" value="30" />
           <entry key="xml" value="475" />
@@ -75,7 +70,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="5338" />
-          <entry key="JAVA" value="7553" />
+          <entry key="JAVA" value="7592" />
           <entry key="JavaScript" value="1" />
           <entry key="Markdown" value="19" />
           <entry key="Properties" value="30" />
@@ -141,8 +136,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-202">
-              <caret line="182" column="41" selection-start-line="182" selection-start-column="41" selection-end-line="182" selection-end-column="41" />
+            <state relative-caret-position="3762">
+              <caret line="198" column="100" lean-forward="true" selection-start-line="198" selection-start-column="100" selection-end-line="198" selection-end-column="100" />
             </state>
           </provider>
         </entry>
@@ -162,8 +157,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/faceDemo/util/FaceHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="311" column="39" selection-start-line="311" selection-start-column="23" selection-end-line="311" selection-end-column="39" />
+            <state relative-caret-position="247">
+              <caret line="31" column="54" lean-forward="true" selection-end-line="400" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -207,9 +202,9 @@
       <find>login</find>
       <find>facequality</find>
       <find>failedCount</find>
-      <find>toggleLoginType</find>
       <find>logi</find>
       <find>detec</find>
+      <find>toggleLoginType</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -368,7 +363,7 @@
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1547199986589" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1547200494337" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../tomcat/apache-tomcat-8.0.52/webapps/faceDemo" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -515,7 +510,7 @@
       <workItem from="1547038643391" duration="7728000" />
       <workItem from="1547080817715" duration="15517000" />
       <workItem from="1547129063556" duration="1169000" />
-      <workItem from="1547171313031" duration="19457000" />
+      <workItem from="1547171313031" duration="20806000" />
     </task>
     <servers />
   </component>
@@ -528,7 +523,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50253000" />
+    <option name="totallyTimeSpent" value="51602000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -554,7 +549,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.4923717" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.41331485" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3509015" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32871014" />
@@ -742,13 +737,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-202">
-          <caret line="182" column="41" selection-start-line="182" selection-start-column="41" selection-end-line="182" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/faceDemo/controller/UserController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
@@ -786,10 +774,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3762">
+          <caret line="198" column="100" lean-forward="true" selection-start-line="198" selection-start-column="100" selection-end-line="198" selection-end-column="100" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/faceDemo/util/FaceHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="311" column="39" selection-start-line="311" selection-start-column="23" selection-end-line="311" selection-end-column="39" />
+        <state relative-caret-position="247">
+          <caret line="31" column="54" lean-forward="true" selection-end-line="400" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
