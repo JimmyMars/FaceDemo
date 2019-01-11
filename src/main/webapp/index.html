@@ -179,6 +179,8 @@
                         this._postAliveCheck(CHECK_TYPE_MOUTH, user.id)
                     }, 2000)
                 },
+                // 活体检测请求，这里会递归调用，其实也可以用定时，这里
+                // 用递归主要是希望每一次检测请求都在检测完成之后才继续调下一次
                 _postAliveCheck(checkType, userId) {
                     console.log(checkType)
                     this.tip = `请${checkType===CHECK_TYPE_MOUTH ? '张张嘴' : '眨眨眼'}`

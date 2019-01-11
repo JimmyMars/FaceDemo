@@ -17,6 +17,11 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
 
+/**
+ * 人脸识别工具类
+ * @author ma_yi
+ * 个人博客 https://blog.csdn.net/qq_23412263
+ */
 public class FaceHelper {
     // 调用 API
     private static final String FACE_URL ="https://api-cn.faceplusplus.com/facepp/v3/";
